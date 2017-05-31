@@ -3,40 +3,43 @@ import Text.Show.Functions
 import Data.Char
 import Data.List
 
--- Modelado de Cliente (Punto 1)
-type Nombre = String
+--Modelado de Cliente
+type Nombre      = String
 type Resistencia = Int
-type Amigos = [Nombre]
---segunda entrega punto 1
-type Bebida = Cliente -> Cliente
-type Bebidas = [Bebida]
+type Amigos      = [Nombre]
+type Bebida 	 = Cliente -> Cliente --segunda entrega punto 1
+type Bebidas 	 = [Bebida]
+data Cliente 	 = Cliente Nombre Resistencia Amigos Bebidas deriving (Show)
+--data Cliente       = Cliente { Nombre :: String, Resistencia :: Int, Amigos :: [nombre], Bebidas [Bebida] } deriving (Show)
 
-data Cliente = Cliente Nombre Resistencia Amigos Bebidas deriving (Show)
---type bebida = Cliente->Cliente
 nombre (Cliente nom _ _ _) = nom
 resistencia (Cliente _ res _ _) = res
 amigos (Cliente _ _ ami _) = ami
 bebidas (Cliente _ _ _ beb) = beb
 
-agregarAmigo nuevoAmigo unCliente | ((nombre nuevoAmigo) == (nombre unCliente)) = unCliente
-                                  | (esAmigo nuevoAmigo unCliente ) = unCliente
-                                  | otherwise = (Cliente (nombre unCliente) (resistencia unCliente) ((nombre nuevoAmigo):(amigos unCliente)) (bebidas unCliente))
+agregarAmigo nuevoAmigo unCliente | nombre nuevoAmigo == nombre unCliente = unCliente
+                                  | esAmigo nuevoAmigo unCliente = unCliente
+                                  | otherwise = (Cliente (nombre unCliente) (resistencia unCliente) ((nombre nuevoAmigo):(amigos unCliente)) (bebidas UnCliente))
 
-
-rodri = Cliente "Rodri" 55 [] [tintico]
-marcos = Cliente "Marcos" 40 ["Rodri"] [klusener "guinda"]
-cristian = Cliente "Cristian" 2 [] [grogXD, jarraloca]
-ana = Cliente "Ana" 120 ["Marcos", "Rodri"] []
+--Clientes
+rodri         = Cliente "Rodri" 55 [] [tintico]
+marcos        = Cliente "Marcos" 40 ["Rodri"] [klusener "guinda"]
+cristian      = Cliente "Cristian" 2 [] [grogXD, jarraloca]
+ana           = Cliente "Ana" 120 ["Marcos", "Rodri"] []
 robertoCarlos = Cliente "Roberto Carlos" 165 [] []
----- Funcion comoEsta (primera entrega  Punto 3)
-comoEsta unCliente | ((resistencia unCliente) >= 50) = (nombre unCliente) ++ " esta fresco"
-                   | (((resistencia unCliente) <= 50) && ((length (amigos unCliente) >= 2))) = (nombre unCliente) ++ " esta piola"
-                   | otherwise = (nombre unCliente) ++  " esta duro"
--- Reconocer a un cliente como amigo (primera entrega  Punto 4)
+
+--Funcion comoEsta
+comoEsta unCliente | (resistencia unCliente >= 50) = (nombre unCliente) ++ " fresco"
+                   | (length (amigos unCliente) >= 2) = (nombre unCliente) ++ " piola"
+                   | otherwise = (nombre unCliente) ++  " duro"
+				   
+--Reconocer a un cliente como amigo
 esAmigo unCliente otroCliente = elem (nombre unCliente) (amigos otroCliente)
--- Bebidas (primera entrega Punto 5)
+
+--Bebidas
 cambiarResistencia :: Int -> Cliente -> Cliente
-cambiarResistencia valor unCliente = (Cliente (nombre unCliente) valor (amigos unCliente) (bebidas unCliente))
+--cambiarResistencia valor unCliente = (Cliente (nombre unCliente) valor (amigos unCliente) (bebidas unCliente))
+cambiarResistencia valor unCliente = (Cliente (nombre unCliente) (resistencia unCliente + valor) (amigos unCliente) (bebidas unCliente))
 
 cambiarNombre :: String -> Cliente -> Cliente
 cambiarNombre nuevonombre unCliente = (Cliente nuevonombre (resistencia unCliente) (amigos unCliente) (bebidas unCliente))
@@ -48,13 +51,13 @@ grogXD :: Bebida
 grogXD unCliente = cambiarResistencia 0 unCliente
 
 jarraloca :: Bebida
-jarraloca unCliente = cambiarResistencia (resistencia unCliente - 10) unCliente
+jarraloca unCliente = cambiarResistencia (-10) unCliente
 
 klusener :: String->Bebida
-klusener gusto unCliente = cambiarResistencia ((resistencia unCliente) - (length gusto)) unCliente
+klusener gusto unCliente = cambiarResistencia (-(length gusto)) unCliente
 
 tintico:: Bebida
-tintico unCliente = cambiarResistencia (resistencia unCliente + (5 * (length (amigos unCliente)))) unCliente
+tintico unCliente = cambiarResistencia (5 * (length (amigos unCliente))) unCliente
 
 soda::Int->Bebida
 soda fuerza unCliente  = cambiarNombre ("e" ++ (calcularRs fuerza) ++ "p" ++ (nombre unCliente)) unCliente
@@ -68,52 +71,55 @@ rescatarse horas unCliente   | horas > 3 = cambiarResistencia (resistencia unCli
 ----((klusener "huevo").(rescatarse 2).(klusener "chocolate").(jarraloca))ana
 
 --------------------------segunda entrega----------------------
----- punto 1. V----
+---Punto 1
 cantidadDeBebidasTomadas :: Cliente -> Int
 cantidadDeBebidasTomadas unCliente = length (bebidas unCliente)
 
-----punto B----
+---B
 agregarBebida :: Bebida -> Cliente -> Cliente
 agregarBebida beb unCliente = (Cliente (nombre unCliente) (resistencia unCliente) (amigos unCliente) ((bebidas unCliente)++[beb]))
+
 tomarBebida :: Bebida -> Cliente -> Cliente
 tomarBebida beb unCliente = beb (agregarBebida beb unCliente)
 
-----punto C----
+---C
 tomarTragos :: [Bebida] -> Cliente -> Cliente
 tomarTragos listaBebidas unCliente = foldl(\unCliente trago -> tomarBebida trago unCliente) unCliente listaBebidas
 
-----punto D----
+---D
 dameOtro :: Cliente -> Cliente
 dameOtro unCliente = tomarBebida (last(bebidas unCliente)) unCliente
 
---punto 2--
-----a----
+--Punto 2
+---A
 puedeTomar :: Cliente -> Bebida -> Bool
 puedeTomar unCliente bebida = ((resistencia (tomarBebida bebida unCliente)) > 0)
+
 cualesPuedeTomar :: [Bebida] -> Cliente -> [Bebida]
 cualesPuedeTomar bebidas unCliente = filter (puedeTomar unCliente) bebidas
 
-----b----
+---B
 cuantasPuedeTomar :: [Bebida] -> Cliente -> Int
 cuantasPuedeTomar bebida unCliente = length (cualesPuedeTomar bebida unCliente)
 
---Punto 3--
+--Punto 3
 type NombreItinerario = String
-type Duracion = Float
-type Plan = Cliente -> Cliente
-type Planl = [Plan]
-data Itinerario = Itinerario NombreItinerario Duracion Planl deriving (Show)
+type Duracion         = Float
+type Plan             = Cliente -> Cliente
+type Planl            = [Plan]
+data Itinerario       = Itinerario NombreItinerario Duracion Planl deriving (Show)
 
 nombreitinerario (Itinerario nomInt _ _) = nomInt
 duracion (Itinerario _ dur _ ) = dur
 planeacion (Itinerario _ _ plan) = plan
 
-mezclaExplosiva = Itinerario "Mezcla explosiva" 2.5 [grogXD, grogXD, klusener "huevo", klusener "frutilla"]
+mezclaExplosiva  = Itinerario "Mezcla explosiva" 2.5  [grogXD, grogXD, klusener "huevo", klusener "frutilla"]
 itinerarioBasico = Itinerario "Itinerario basico" 5.0 [jarraloca, klusener "chocolate", rescatarse 2, klusener "huevo"]
-salidaDeAmigos = Itinerario "Salida de amigos" 1.0 [soda 1, tintico, (agregarAmigo robertoCarlos), jarraloca]
+salidaDeAmigos   = Itinerario "Salida de amigos" 1.0  [soda 1, tintico, (agregarAmigo robertoCarlos), jarraloca]
 
 hacerPlan :: Cliente -> Plan -> Cliente
 hacerPlan unCliente plan = plan unCliente
+
 hacerItinerario :: Cliente->Itinerario->Cliente
 hacerItinerario unCliente itinerario = foldl (hacerPlan) unCliente (planeacion itinerario)
 
@@ -152,7 +158,6 @@ resistencia ana < resistencia chuckNorris
 True
 esto se logra gracias a que haskell es "lazy" osea no evalua si no se usa, por eso jamas evalua la lista de bebidas,
 solo se fija en la resistencia.
-
 d)si, mismo motivo que la anterior. ya que es lazy solo evalua las abstracciones que se usan.
 -}
 --punto 6--
