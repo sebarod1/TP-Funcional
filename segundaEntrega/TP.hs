@@ -1,4 +1,6 @@
 module TP where
+
+import Prelude hiding ((==))
 import Text.Show.Functions
 import Data.Char
 import Data.List
@@ -17,9 +19,14 @@ resistencia (Cliente _ res _ _) = res
 amigos (Cliente _ _ ami _) = ami
 bebidas (Cliente _ _ _ beb) = beb
 
+instance Eq Cliente where
+(==) cliente otroCliente = (nombre cliente, resistencia cliente, amigos cliente, bebidas cliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, bebidas otroCliente)
+
+{-
 agregarAmigo nuevoAmigo unCliente | nombre nuevoAmigo == nombre unCliente = unCliente
                                   | esAmigo nuevoAmigo unCliente = unCliente
-                                  | otherwise = (Cliente (nombre unCliente) (resistencia unCliente) ((nombre nuevoAmigo):(amigos unCliente)) (bebidas UnCliente))
+                                  | otherwise = (Cliente (nombre unCliente) (resistencia unCliente) ((nombre nuevoAmigo):(amigos unCliente)) (bebidas unCliente))
+-}
 
 --Clientes
 rodri         = Cliente "Rodri" 55 [] [tintico]
@@ -29,9 +36,9 @@ ana           = Cliente "Ana" 120 ["Marcos", "Rodri"] []
 robertoCarlos = Cliente "Roberto Carlos" 165 [] []
 
 --Funcion comoEsta
-comoEsta unCliente | (resistencia unCliente >= 50) = (nombre unCliente) ++ " fresco"
-                   | (length (amigos unCliente) >= 2) = (nombre unCliente) ++ " piola"
-                   | otherwise = (nombre unCliente) ++  " duro"
+comoEsta unCliente | (resistencia unCliente >= 50) = (nombre unCliente) ++ " esta fresco"
+                   | (length (amigos unCliente) >= 2) = (nombre unCliente) ++ " esta piola"
+                   | otherwise = (nombre unCliente) ++  " esta duro"
 				   
 --Reconocer a un cliente como amigo
 esAmigo unCliente otroCliente = elem (nombre unCliente) (amigos otroCliente)
@@ -115,7 +122,7 @@ planeacion (Itinerario _ _ plan) = plan
 
 mezclaExplosiva  = Itinerario "Mezcla explosiva" 2.5  [grogXD, grogXD, klusener "huevo", klusener "frutilla"]
 itinerarioBasico = Itinerario "Itinerario basico" 5.0 [jarraloca, klusener "chocolate", rescatarse 2, klusener "huevo"]
-salidaDeAmigos   = Itinerario "Salida de amigos" 1.0  [soda 1, tintico, (agregarAmigo robertoCarlos), jarraloca]
+--salidaDeAmigos   = Itinerario "Salida de amigos" 1.0  [soda 1, tintico, (agregarAmigo robertoCarlos), jarraloca]
 
 hacerPlan :: Cliente -> Plan -> Cliente
 hacerPlan unCliente plan = plan unCliente
@@ -148,7 +155,6 @@ itinerarioIntenso itinerariol = foldl1 mayorItinerario itinerariol
 
 --punto 5, con map sale con fritas, en caso de correr y pone chuckNorris en haskell con Ctrl+C lo interumpis.
 chuckNorris = Cliente "Chuck" 1000 ["Ana"] (map soda [1..])
-
 {-
 b)como poder se puede, haskell no va a tirar ningun error. la cuestion es que al ser un lista infinita,
 nunca se va a poder conocer cual es el ultimo trago, siempre hay un elemento mas en la lista y haskell intenta reducir
