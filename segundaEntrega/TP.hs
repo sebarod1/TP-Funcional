@@ -20,10 +20,10 @@ amigos (Cliente _ _ ami _) = ami
 bebidas (Cliente _ _ _ beb) = beb
 
 
-{-(==) :: Eq Cliente => Cliente -> Cliente -> Bool
-instance Eq Cliente => Cliente -> Cliente -> Bool where
+{-(==) :: Eq Cliente => Cliente -> Cliente -> Bool-}
+instance Eq Cliente where
  (==) unCliente otroCliente = (nombre unCliente, resistencia unCliente, amigos unCliente, bebidas unCliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, bebidas otroCliente)
--}
+
 
 agregarAmigo nuevoAmigo unCliente | nombre nuevoAmigo == nombre unCliente = unCliente
                                   | esAmigo nuevoAmigo unCliente = unCliente
