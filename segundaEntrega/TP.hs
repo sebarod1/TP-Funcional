@@ -1,6 +1,6 @@
 module TP where
 
-import Prelude hiding ((==))
+--import Prelude hiding ((==))
 import Text.Show.Functions
 import Data.Char
 import Data.List
@@ -19,14 +19,16 @@ resistencia (Cliente _ res _ _) = res
 amigos (Cliente _ _ ami _) = ami
 bebidas (Cliente _ _ _ beb) = beb
 
-instance Eq Cliente where
-(==) cliente otroCliente = (nombre cliente, resistencia cliente, amigos cliente, bebidas cliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, bebidas otroCliente)
 
-{-
+{-(==) :: Eq Cliente => Cliente -> Cliente -> Bool
+instance Eq Cliente => Cliente -> Cliente -> Bool where
+ (==) unCliente otroCliente = (nombre unCliente, resistencia unCliente, amigos unCliente, bebidas unCliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, bebidas otroCliente)
+-}
+
 agregarAmigo nuevoAmigo unCliente | nombre nuevoAmigo == nombre unCliente = unCliente
                                   | esAmigo nuevoAmigo unCliente = unCliente
                                   | otherwise = (Cliente (nombre unCliente) (resistencia unCliente) ((nombre nuevoAmigo):(amigos unCliente)) (bebidas unCliente))
--}
+
 
 --Clientes
 rodri         = Cliente "Rodri" 55 [] [tintico]
@@ -55,7 +57,7 @@ calcularRs :: Int -> String
 calcularRs cantidad = replicate cantidad 'r'
 
 grogXD :: Bebida
-grogXD unCliente = cambiarResistencia 0 unCliente
+grogXD unCliente = cambiarResistencia (-(resistencia unCliente)) unCliente
 
 jarraloca :: Bebida
 jarraloca unCliente = cambiarResistencia (-10) unCliente
@@ -70,8 +72,8 @@ soda::Int->Bebida
 soda fuerza unCliente  = cambiarNombre ("e" ++ (calcularRs fuerza) ++ "p" ++ (nombre unCliente)) unCliente
 
 ----Funcion Rescatarse (Punto 6)
-rescatarse horas unCliente   | horas > 3 = cambiarResistencia (resistencia unCliente + 200) unCliente
-                             | otherwise = cambiarResistencia (resistencia unCliente + 100) unCliente
+rescatarse horas unCliente   | horas > 3 = cambiarResistencia 200 unCliente
+                             | otherwise = cambiarResistencia 100 unCliente
 
 ---- Itinerario Ana (Punto 7)
 ----klusener "huevo" (rescatarse 2 (klusener "chocolate" (jarraloca ana)))
