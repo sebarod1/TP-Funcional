@@ -22,7 +22,7 @@ bebidas (Cliente _ _ _ beb) = beb
 
 {-(==) :: Eq Cliente => Cliente -> Cliente -> Bool-}
 instance Eq Cliente where
- (==) unCliente otroCliente = (nombre unCliente, resistencia unCliente, amigos unCliente, bebidas unCliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, bebidas otroCliente)
+ (==) unCliente otroCliente = (nombre unCliente, resistencia unCliente, amigos unCliente, cantidadDeBebidasTomadas unCliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, cantidadDeBebidasTomadas otroCliente)
 
 
 agregarAmigo nuevoAmigo unCliente | nombre nuevoAmigo == nombre unCliente = unCliente
@@ -171,3 +171,7 @@ d)si, mismo motivo que la anterior. ya que es lazy solo evalua las abstracciones
 --punto 6--
 {-agregarAmigos :: Cliente -> [] -> cliente
 agregarAmigos cliente (cabeza:cola)-}
+--punto 6--
+{-agregarAmigos :: Cliente -> [] -> cliente
+agregarAmigos cliente (cabeza:cola)-}
+

@@ -20,7 +20,7 @@ datosTest3 2 = ("Rodri debe estar fresco",comoEsta rodri, "Rodri esta fresco")
 datosTest3 3 = ("Marcos debe estar duro",comoEsta marcos, "Marcos esta duro")
 datosTest3 4 = ("Si Marcos se hace amigo de Ana y Rodri, está piola",(comoEsta.(agregarAmigo rodri).(agregarAmigo ana))marcos,"Marcos esta piola")
 
-datosTest4 1 = ("Rodri intenta hacerse amigo de sí mismo", agregarAmigo rodri rodri,Cliente "Rodri" 55 [] [<function>])
+datosTest4 1 = ("Rodri intenta hacerse amigo de sí mismo", agregarAmigo rodri rodri,Cliente "Rodri" 55 [] [tintico])
 --datosTest4 2 = ("Marcos intenta hacerse amigo de Rodri, de quien ya es amigo", agregarAmigo rodri marcos,Cliente "Marcos" 40 ["Rodri"] [klusener "guinda"])--"Cliente \"Marcos\" 40 [\"Rodri\"]")
 --datosTest4 3 = ("Rodri intenta hacerse amigo de Marcos, que no era su amigo", agregarAmigo marcos rodri,Cliente "Rodri" 55 ["Marcos"] [tintico])--"Cliente \"Rodri\" 55 [\"Marcos\"]")
 {-
@@ -72,7 +72,7 @@ armarTest fDatosTest = (\(titulo, resultado, esperado) -> TestLabel titulo (resu
 
 armarTestSuite titulo fDatosTest cant = (TestLabel titulo . TestList . map (armarTest fDatosTest)) [1.. cant]
 tests = TestList [
-    armarTestSuite "Entrega 1 Punto 3" datosTest3 4
+    armarTestSuite "Entrega 1 Punto 3" datosTest3 1,
     armarTestSuite "Entrega 1 Punto 4" datosTest4 1
     {-
     armarTestSuite "Entrega 1 Punto 5" datosTest5 9,
