@@ -19,11 +19,12 @@ resistencia (Cliente _ res _ _) = res
 amigos (Cliente _ _ ami _) = ami
 bebidas (Cliente _ _ _ beb) = beb
 
-
 {-(==) :: Eq Cliente => Cliente -> Cliente -> Bool-}
 instance Eq Cliente where
  (==) unCliente otroCliente = (nombre unCliente, resistencia unCliente, amigos unCliente, cantidadDeBebidasTomadas unCliente) == (nombre otroCliente, resistencia otroCliente, amigos otroCliente, cantidadDeBebidasTomadas otroCliente)
 
+instance Eq Itinerario where  
+ (==) itinerario1 itinerario2 = (nombreitinerario itinerario1) == (nombreitinerario itinerario2)
 
 agregarAmigo nuevoAmigo unCliente | nombre nuevoAmigo == nombre unCliente = unCliente
                                   | esAmigo nuevoAmigo unCliente = unCliente
@@ -60,13 +61,13 @@ grogXD :: Bebida
 grogXD unCliente = cambiarResistencia (-(resistencia unCliente)) unCliente
 
 jarraloca :: Bebida
-jarraloca unCliente = cambiarResistencia (-10) unCliente
+jarraloca  = cambiarResistencia (-10) 
 
 klusener :: String->Bebida
-klusener gusto unCliente = cambiarResistencia (-(length gusto)) unCliente
+klusener gusto = cambiarResistencia (-(length gusto)) 
 
 tintico:: Bebida
-tintico unCliente = cambiarResistencia (5 * (length (amigos unCliente))) unCliente
+tintico unCliente = (cambiarResistencia.(5*).length.amigos) unCliente unCliente
 
 soda::Int->Bebida
 soda fuerza unCliente  = cambiarNombre ("e" ++ (calcularRs fuerza) ++ "p" ++ (nombre unCliente)) unCliente
@@ -124,7 +125,7 @@ planeacion (Itinerario _ _ plan) = plan
 
 mezclaExplosiva  = Itinerario "Mezcla explosiva" 2.5  [grogXD, grogXD, klusener "huevo", klusener "frutilla"]
 itinerarioBasico = Itinerario "Itinerario basico" 5.0 [jarraloca, klusener "chocolate", rescatarse 2, klusener "huevo"]
---salidaDeAmigos   = Itinerario "Salida de amigos" 1.0  [soda 1, tintico, (agregarAmigo robertoCarlos), jarraloca]
+salidaDeAmigos   = Itinerario "Salida de amigos" 1.0  [soda 1, tintico, (agregarAmigo robertoCarlos), jarraloca]
 
 hacerPlan :: Cliente -> Plan -> Cliente
 hacerPlan unCliente plan = plan unCliente
@@ -169,9 +170,11 @@ solo se fija en la resistencia.
 d)si, mismo motivo que la anterior. ya que es lazy solo evalua las abstracciones que se usan.
 -}
 --punto 6--
-{-agregarAmigos :: Cliente -> [] -> cliente
-agregarAmigos cliente (cabeza:cola)-}
---punto 6--
-{-agregarAmigos :: Cliente -> [] -> cliente
-agregarAmigos cliente (cabeza:cola)-}
+{-
+tomarJarraPopular :: Cliente -> Int -> Cliente
+tomarJarraPopular cliente 0 = cliente
+tomarJarraPopular cliente espirituosidad = tomarJarraPopular (amigoDeAmigo cliente) (espirituosidad-1)
 
+amigoDeAmigo:: Cliente -> Cliente
+amigoDeAmigo cliente = foldl () cliente (amigos cliente)
+-}
